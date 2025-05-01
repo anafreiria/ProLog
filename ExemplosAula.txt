@@ -1,0 +1,101 @@
+Maximo valor de uma lista
+
+maximo(X, [X]).
+maximo(A, [A|B]) :- maximo(C, B), A>=C.
+maximo(C, [A|B]) :- maximo(C, B), A<C.
+
+------------------------------------------------------------
+
+Verificando se um valor é membro de uma lista
+
+membro(X,[X|_]).
+membro(X,[_|Y]) :- membro(X,Y)
+
+------------------------------------------------------------
+Predicato que calcula o comprimento de uma lista
+
+comp (0, []).
+comp (C, [_|B]) :- comp (A,B), C is A+1.
+
+--------------------------------------------------------------
+Acha o nesimo valor de uma lista
+
+nesimo(1, [A|_], A). 
+nesimo(N, [_,Y], X) :- N>1, N1 is N-1, nesimo (N1, Y, X).
+
+\\O n-esimo de uma lista é (n-1)-ésimo da cauda dessa lista.
+--------------------------------------------------------------
+Predicado que calcula a soma dos valores numa lista de inteiros.
+
+total (0,[]).
+total ([A|B], T) :- total(B, TB), T is TB+A
+
+------------------------------------------------------------------
+Seleciona um valor de uma lista 
+sel (X, [X|Y], Y).
+sel (A, [B|C],[B|D]) :- sel(B,C,D).
+
+ponto e virgulo inicia backtracking
+-----------------------------------------------------------------
+Permutações de uma lista
+
+permuta (A, [B|D]) :- sel(B,A,C), permuta(C,D).
+permuta ([], []).
+-----------------------------------------------------------------
+Ordenar uma lista
+
+ordem([]).
+ordem([A]).
+ordem([A,B|C]) :- A =< B, ordem([B|C]).
+-----------------------------------------------------------------
+Em algumas situações é preciso impedir que o programa
+prolog volte atrás em uma decisão tomada (backtracking).
+Isto pode ser feito usando um predicado que se chama corte e
+é representado por um ponto de exclamação.
+
+Ver se um valor esta em uma lista
+
+in(X,[X|_]) :- !.
+in(X,[_|Y]) :- in(X,Y).
+
+Nesse caso ele só da uma resposta e pronto acabou
+----------------------------------------------------------------
+inserir valor na lista
+
+add(X,L,L) :- in(X,L), !.
+add(X,L,[X|L]).
+
+----------------------------------------------------------------
+Concatenar lista
+ap([],L,L).
+ap([A|B], C, [A|D]) :- ap(B,C,D).
+
+Reverter lista
+reversa([],[]).
+reversa([A|B],L) :- reversa(B, Brev), ap(Brev, [A], L).
+---------------------------------------------------------------
+
+Existem no Prolog, também, predicados similares aos
+comandos de repetição de uma linguagem procedural: forall,
+findall, between e maplist.
+* Findall é um predicado pré-definido de prolog gera uma lista
+com todas as alternativas encontradas que satisfaça a uma
+consulta
+*O forall(CONTROLE, DO) imita um comando for; o
+parâmetro CONTROLE indica quantas vezes ele deve repetir,
+o executando o segundo parâmetro.
+*O between(INIC,FIM,I) retorna por retrocesso todos os
+valores da faixa declarada. A combinação forall e between
+imita um comando for.
+*O predicado maplist mapeia um predicado, no exemplo
+seguinte, plus/3, para todos os elementos de uma lista,
+retornando uma nova lista.
+---------------------------------------------------------------
+
+mult(X,Y,Z) :- Z is X * Y.
+
+maplist (mult, [1,2,3], [3,2,4], L)
+resposta: [3,4,12]
+
+
+
