@@ -18,3 +18,34 @@ removeMin(M, L, Lo) :- min(L, M), apaga(M, L, Lo).
 
 ordenaSelecao(L, [M|S]) :- removeMin(M, L, Lo), ordenaSelecao(Lo, S).
 ordenaSelecao([], []).
+
+% Ordenação por Troca
+
+troca (L, S) :-append(Ord, [A,B|Ls], L), A > B, !, append(Ord, [B,A|Ls], Li), troca(Li, S).
+troca (L, L).
+
+
+% Ordenação por quickSort = particiona e ordena
+
+% Caso 1: X < Pivo, adiciona X à lista de Menores
+particao([X|L], Pivo, [X|Menores], Maiores) :-
+    X < Pivo, !,
+    particao(L, Pivo, Menores, Maiores).
+
+% Caso 2: X >= Pivo, adiciona X à lista de Maiores
+particao([X|L], Pivo, Menores, [X|Maiores]) :-
+    X >= Pivo, !,
+    particao(L, Pivo, Menores, Maiores).
+
+% Caso base: lista vazia
+particao([], _, [], []).
+
+% QuickSort principal
+quickSort([X|Xs], S) :-
+    particao(Xs, X, Menores, Maiores),
+    quickSort(Menores, SMenores),
+    quickSort(Maiores, SMaiores),
+    append(SMenores, [X|SMaiores], S).
+
+% Caso base: lista vazia já está ordenada
+quickSort([], []).
